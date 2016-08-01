@@ -64,6 +64,9 @@ while count < maxCount:
     except socket.timeout:
         print("Connection timed out!")
         failed += 1
+    except OSError as e:
+        print("OS Error:", e)
+        failed += 1
 
     # Stop Timer
     s_stop = timer()

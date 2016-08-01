@@ -56,7 +56,7 @@ def getResults():
 
     lRate = 0
     if failed != 0:
-        lRate = failed / (count+1) * 100
+        lRate = failed / (count) * 100
         lRate = "%.2f" % lRate
 
     print("\nTCP Ping Results: Connections (Total/Pass/Fail): [{:}/{:}/{:}] (Failed: {:}%)".format((count), passed, failed, str(lRate)))

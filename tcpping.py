@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-TCP Ping Test
+TCP Ping Test (defaults to port 80, 10000 packets)
 
-Usage: ./tcpping.py host port
+Usage: ./tcpping.py host [port] [maxCount]
 - Ctrl-C Exits with Results
 """
 
@@ -12,11 +12,41 @@ import time
 import signal
 from timeit import default_timer as timer
 
+host = None
+port = 80
+
 # Default to 10000 connections max
 maxCount = 10000
 count = 0
 
-# Pass/Fail
+## Inputs
+
+# Required Host
+try:
+    host = sys.argv[1]
+except IndexError:
+    print("Usage: tcpping.py host [port] [maxCount]")
+    sys.exit(1)
+
+# Optional Port
+try:
+    port = int(sys.argv[2])
+except ValueError:
+    print("Error: Port Must be Integer:", sys.argv[3])
+    sys.exit(1)
+except IndexError:
+    pass
+
+# Optional maxCount
+try:
+    maxCount = int(sys.argv[3])
+except ValueError:
+    print("Error: Max Count Value Must be Integer", sys.argv[3])
+    sys.exit(1)
+except IndexError:
+    pass
+
+# Pass/Fail counters
 passed = 0
 failed = 0
 
@@ -29,7 +59,7 @@ def getResults():
         lRate = failed / (count+1) * 100
         lRate = "%.2f" % lRate
 
-    print("\nConnection Results: Total: {:}, Lost: {:}, Loss Rate: {:}%".format((count+1), failed, str(lRate)))
+    print("\nConnection Results: Total: {:}, Lost: {:}, Loss Rate: {:}%".format((count), failed, str(lRate)))
 
 def signal_handler(signal, frame):
     """ Catch Ctrl-C and Exit """
@@ -41,6 +71,9 @@ signal.signal(signal.SIGINT, signal_handler)
 
 # Loop while less than max count or until Ctrl-C caught
 while count < maxCount:
+
+    # Increment Counter
+    count += 1
 
     success = False
 
@@ -56,7 +89,7 @@ while count < maxCount:
 
     # Try to Connect
     try:
-        s.connect((sys.argv[1], int(sys.argv[2])))
+        s.connect((host, int(port)))
         s.shutdown(socket.SHUT_RD)
         success = True
     
@@ -73,12 +106,11 @@ while count < maxCount:
     s_runtime = "%.2f" % (1000 * (s_stop - s_start))
 
     if success:
-        print("Connected to %s:%s via TCP: tcp_seq=%s time=%s ms" % (sys.argv[1], sys.argv[2], count, s_runtime))
+        print("Connected to %s[%s]: tcp_seq=%s time=%s ms" % (host, port, (count-1), s_runtime))
         passed += 1
 
     # Sleep for 1sec
     time.sleep(1)
-    count += 1
 
 # Output Results if maxCount reached
 getResults()

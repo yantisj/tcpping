@@ -59,7 +59,7 @@ def getResults():
         lRate = failed / (count+1) * 100
         lRate = "%.2f" % lRate
 
-    print("\nConnection Results: Total: {:}, Lost: {:}, Loss Rate: {:}%".format((count), failed, str(lRate)))
+    print("\nTCP Ping Results: Connections (Total/Pass/Fail): [{:}/{:}/{:}] (Failed: {:}%)".format((count), passed, failed, str(lRate)))
 
 def signal_handler(signal, frame):
     """ Catch Ctrl-C and Exit """
@@ -110,7 +110,8 @@ while count < maxCount:
         passed += 1
 
     # Sleep for 1sec
-    time.sleep(1)
+    if count < maxCount:
+        time.sleep(1)
 
 # Output Results if maxCount reached
 getResults()

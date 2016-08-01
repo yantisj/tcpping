@@ -6,7 +6,10 @@ interrupted with Ctrl-C.
 
 ## Usage
 
-```$ ./tcpping.py host port```
+```
+$ ./tcpping.py
+Usage: tcpping.py host [port] [maxCount]
+```
 
 ## Example
 ```
@@ -16,7 +19,7 @@ Connected to 10.33.1.100:22 via TCP: tcp_seq=1 time=39.66 ms
 Connected to 10.33.1.100:22 via TCP: tcp_seq=2 time=20.41 ms
 Connected to 10.33.1.100:22 via TCP: tcp_seq=3 time=85.18 ms
 ^C
-Connection Results: Total: 3, Lost: 1, Loss Rate: 25.00%
+TCP Ping Results: Connections (Total/Pass/Fail): [4/3/1] (Failed: 25%)
 ```
 
 ## Contributors
